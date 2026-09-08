@@ -57,33 +57,33 @@ def parse_excel_to_json(excel_path):
             "shortName": "มศว (SWU)",
             "abbr": "SWU",
             "theme": "swu",
-            "badgeColor": "bg-rose-50 text-rose-700 border-rose-200",
+            "badgeColor": "bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-900/70 dark:text-rose-200 dark:border-rose-700",
             "accentColor": "from-rose-500 to-red-600",
-            "tagColor": "bg-rose-100 text-rose-800"
+            "tagColor": "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-200"
         },
         "มหาวิทยาลัยเกษตรศาสตร์": {
             "shortName": "มก. (KU)",
             "abbr": "KU",
             "theme": "ku",
-            "badgeColor": "bg-emerald-50 text-emerald-700 border-emerald-200",
+            "badgeColor": "bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-900/70 dark:text-emerald-200 dark:border-emerald-700",
             "accentColor": "from-emerald-500 to-teal-600",
-            "tagColor": "bg-emerald-100 text-emerald-800"
+            "tagColor": "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200"
         },
         "มหาวิทยาลัยธรรมศาสตร์": {
             "shortName": "มธ. (TU)",
             "abbr": "TU",
             "theme": "tu",
-            "badgeColor": "bg-amber-50 text-amber-800 border-amber-200",
+            "badgeColor": "bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-900/70 dark:text-amber-200 dark:border-amber-700",
             "accentColor": "from-amber-500 to-red-500",
-            "tagColor": "bg-amber-100 text-amber-900"
+            "tagColor": "bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200"
         },
         "มหาวิทยาลัยศิลปากร": {
             "shortName": "มศก. (SU)",
             "abbr": "SU",
             "theme": "su",
-            "badgeColor": "bg-blue-50 text-blue-700 border-blue-200",
+            "badgeColor": "bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/70 dark:text-blue-200 dark:border-blue-700",
             "accentColor": "from-blue-500 to-indigo-600",
-            "tagColor": "bg-blue-100 text-blue-800"
+            "tagColor": "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-200"
         }
     }
     
@@ -128,9 +128,9 @@ def parse_excel_to_json(excel_path):
             "shortName": uni_name[:10],
             "abbr": "UNI",
             "theme": "slate",
-            "badgeColor": "bg-slate-50 text-slate-700 border-slate-200",
+            "badgeColor": "bg-slate-100 text-slate-800 border-slate-300 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600",
             "accentColor": "from-slate-600 to-slate-800",
-            "tagColor": "bg-slate-100 text-slate-800"
+            "tagColor": "bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-200"
         })
         
         uni_data = {

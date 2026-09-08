@@ -99,6 +99,22 @@ export default function App() {
     return universities.find((u) => u.id === activeModalUniId) || null
   }, [activeModalUniId, universities])
 
+  // Badge Styling with Vibrant Light/Dark Mode Contrast for Degree Badges
+  const getUniBadgeStyle = (uni) => {
+    switch (uni?.theme) {
+      case 'swu':
+        return 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-900/70 dark:text-rose-200 dark:border-rose-600'
+      case 'ku':
+        return 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-900/70 dark:text-emerald-200 dark:border-emerald-600'
+      case 'tu':
+        return 'bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-900/70 dark:text-amber-200 dark:border-amber-600'
+      case 'su':
+        return 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/70 dark:text-blue-200 dark:border-blue-600'
+      default:
+        return 'bg-slate-100 text-slate-800 border-slate-300 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600'
+    }
+  }
+
   // Search Results Filter
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return []
@@ -158,7 +174,8 @@ export default function App() {
                         คณะ{u.faculty}
                       </div>
                     </div>
-                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border shrink-0 ${u.badgeColor}`}>
+                    {/* Fixed Degree Badge with High Contrast in Dark Mode */}
+                    <span className={`text-[10px] font-extrabold px-1.5 py-0.5 rounded-lg border shrink-0 ${getUniBadgeStyle(u)}`}>
                       {u.degreeType || 'วท.บ.'}
                     </span>
                   </button>
@@ -273,7 +290,7 @@ export default function App() {
                     >
                       <div>
                         <div className="flex items-center gap-2 mb-1">
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${uni.badgeColor}`}>
+                          <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-lg border ${getUniBadgeStyle(uni)}`}>
                             {uni.degreeType || 'วท.บ.'}
                           </span>
                           <span className="text-xs text-slate-400">
