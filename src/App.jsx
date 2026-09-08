@@ -350,8 +350,8 @@ export default function App() {
           <FileSpreadsheet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
           <span>เชื่อมต่อข้อมูลตรงจาก: <code className="bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono text-xs text-slate-800 dark:text-slate-200">{metadata.sourceExcel || 'สรุป_TCAS70_Port_จิตวิทยา.xlsx'}</code></span>
         </div>
-        <p className="text-xs text-slate-400 dark:text-slate-500">
-          จัดทำขึ้นเพื่อให้เพื่อนเปิดอ่านข้อมูลบนมือถือได้สะดวกและรวดเร็ว • พร้อม Deploy บน Vercel
+        <p className="text-xs sm:text-sm font-semibold text-indigo-600 dark:text-indigo-400">
+          💖 จัดทำโดย "ป๊าเอสุดหล่อ" สั่งการโดย "แม่เป้าสายมึน" 🌸
         </p>
       </footer>
     </div>
