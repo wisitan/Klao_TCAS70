@@ -10,7 +10,7 @@ import {
 } from 'lucide-react'
 
 export default function TimelineCalendar({ onSelectUni }) {
-  const [viewType, setViewType] = useState('month') // 'month' | 'list'
+  const [viewType, setViewType] = useState('list') // 'list' (default as requested) | 'month'
   const [selectedMonthIdx, setSelectedMonthIdx] = useState(4) // default to 'ธ.ค. 69' (index 4)
   const [timelineMode, setTimelineMode] = useState('port') // 'port' | 'quota' (for List view)
 
