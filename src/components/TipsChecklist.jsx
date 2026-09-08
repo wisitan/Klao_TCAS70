@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { CheckSquare, Square, Sparkles, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Square, Sparkles, AlertCircle, CheckCircle2 } from 'lucide-react'
 
 export default function TipsChecklist() {
   const defaultChecklist = [
@@ -98,7 +98,7 @@ export default function TipsChecklist() {
         </div>
       </div>
 
-      {/* Checklist items with Large Text */}
+      {/* Checklist items */}
       <div className="space-y-3">
         {defaultChecklist.map((item) => {
           const isChecked = !!checkedItems[item.id]
@@ -108,8 +108,8 @@ export default function TipsChecklist() {
               onClick={() => toggleCheck(item.id)}
               className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex items-start gap-3.5 select-none ${
                 isChecked
-                  ? 'bg-emerald-50/80 border-emerald-300 text-slate-800'
-                  : 'bg-white border-slate-300 text-slate-800 hover:border-indigo-300'
+                  ? 'bg-emerald-50/80 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-slate-800 dark:text-slate-200'
+                  : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:border-indigo-300'
               }`}
             >
               <button
@@ -117,26 +117,26 @@ export default function TipsChecklist() {
                 className="mt-1 shrink-0 transition-transform active:scale-90"
               >
                 {isChecked ? (
-                  <CheckCircle2 className="w-6 h-6 text-emerald-600 fill-emerald-100" />
+                  <CheckCircle2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400 fill-emerald-100 dark:fill-emerald-900" />
                 ) : (
-                  <Square className="w-6 h-6 text-slate-400 hover:text-indigo-500" />
+                  <Square className="w-6 h-6 text-slate-400 dark:text-slate-500 hover:text-indigo-500" />
                 )}
               </button>
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700">
+                  <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
                     {item.category}
                   </span>
                 </div>
                 <h3
                   className={`text-base sm:text-lg font-bold leading-snug ${
-                    isChecked ? 'line-through text-slate-500' : 'text-slate-900'
+                    isChecked ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-900 dark:text-white'
                   }`}
                 >
                   {item.title}
                 </h3>
-                <p className="text-sm sm:text-base text-slate-600 mt-1.5 leading-relaxed">
+                <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mt-1.5 leading-relaxed">
                   {item.desc}
                 </p>
               </div>
@@ -145,13 +145,13 @@ export default function TipsChecklist() {
         })}
       </div>
 
-      {/* Special Advice Alert with Large Readable Text */}
-      <div className="bg-amber-50 border border-amber-300 rounded-3xl p-5 sm:p-6 text-sm sm:text-base space-y-3">
-        <div className="flex items-center gap-2 font-bold text-amber-950 text-base sm:text-lg">
-          <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
+      {/* Special Advice Alert */}
+      <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-800/70 rounded-3xl p-5 sm:p-6 text-sm sm:text-base space-y-3">
+        <div className="flex items-center gap-2 font-bold text-amber-950 dark:text-amber-200 text-base sm:text-lg">
+          <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
           <span>เคล็ดลับสำคัญสำหรับคนอยากเข้าจิตวิทยา:</span>
         </div>
-        <ul className="list-disc list-inside space-y-2 text-slate-800 leading-relaxed pl-1">
+        <ul className="list-disc list-inside space-y-2 text-slate-800 dark:text-slate-200 leading-relaxed pl-1">
           <li><strong>อย่าเน้นแค่เกียรติบัตรวิชาการ:</strong> จิตวิทยาต้องการคนที่เข้าใจมนุษย์และมีความเมตตา การเล่าเรื่อง (Storytelling) เกี่ยวกับประสบการณ์รับฟังปัญหาเพื่อนหรือทำงานร่วมกับผู้อื่น จะจับใจกรรมการมากกว่า</li>
           <li><strong>ระวังเรื่องความลับผู้รับบริการ:</strong> หากมีกิจกรรมจิตอาสาปรึกษาปัญหา อย่าเปิดเผยชื่อ ข้อมูลส่วนตัว หรือภาพใบหน้าของบุคคลอื่นโดยไม่ได้รับอนุญาต</li>
           <li><strong>เตรียมพร้อมรอบสัมภาษณ์:</strong> คณะจิตวิทยามักเน้นการทดสอบ EQ, ทัศนคติ และความมั่นคงทางอารมณ์</li>

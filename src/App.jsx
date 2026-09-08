@@ -13,7 +13,35 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('')
   const [toastMessage, setToastMessage] = useState('')
   
-  // Bookmarks state (persistent in localStorage)
+  // Theme state (persistent)
+  const [theme, setTheme] = useState(() => {
+    try {
+      const savedTheme = localStorage.getItem('tcas70_theme')
+      if (savedTheme) return savedTheme
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    } catch (e) {
+      return 'light'
+    }
+  })
+
+  // Apply theme class to <html>
+  useEffect(() => {
+    try {
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+      localStorage.setItem('tcas70_theme', theme)
+    } catch (e) {}
+  }, [theme])
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
+    showToast(theme === 'dark' ? 'เปลี่ยนเป็นโหมดสว่าง ☀️' : 'เปลี่ยนเป็นโหมดมืด 🌙')
+  }
+
+  // Bookmarks state (persistent)
   const [bookmarkedIds, setBookmarkedIds] = useState(() => {
     try {
       const saved = localStorage.getItem('tcas70_psy_bookmarks')
@@ -68,12 +96,10 @@ export default function App() {
   // Filter Logic (Search Query & Bookmarks)
   const filteredUniversities = useMemo(() => {
     return universities.filter((u) => {
-      // If bookmarks tab active, only show bookmarked
       if (activeTab === 'bookmarks' && !bookmarkedIds.includes(u.id)) {
         return false
       }
 
-      // Filter by Search Query
       if (searchQuery.trim() !== '') {
         const q = searchQuery.toLowerCase()
         const matchText = `
@@ -90,21 +116,23 @@ export default function App() {
   }, [universities, activeTab, bookmarkedIds, searchQuery])
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white text-sm sm:text-base font-semibold px-5 py-3 rounded-full shadow-2xl backdrop-blur-md flex items-center gap-2.5 animate-bounce">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 dark:bg-slate-100 dark:text-slate-900 text-white text-sm sm:text-base font-semibold px-5 py-3 rounded-full shadow-2xl backdrop-blur-md flex items-center gap-2.5 animate-bounce">
           <span>✨</span>
           <span>{toastMessage}</span>
         </div>
       )}
 
-      {/* Header */}
+      {/* Header with Dark Mode Toggle */}
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         bookmarkedCount={bookmarkedIds.length}
         lastSyncedAt={metadata.lastSyncedAt}
+        theme={theme}
+        toggleTheme={toggleTheme}
       />
 
       {/* Main Content Area */}
@@ -138,15 +166,15 @@ export default function App() {
                 ))}
               </div>
             ) : (
-              <div className="bg-white rounded-3xl border border-slate-300 p-8 text-center space-y-3">
+              <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-300 dark:border-slate-700 p-8 text-center space-y-3">
                 <span className="text-4xl">🔍</span>
-                <h3 className="font-bold text-slate-900 text-base">ไม่พบข้อมูลที่ตรงกับคำค้นหา</h3>
-                <p className="text-sm text-slate-600">
+                <h3 className="font-bold text-slate-900 dark:text-white text-base">ไม่พบข้อมูลที่ตรงกับคำค้นหา</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400">
                   ลองล้างคำค้นหา แล้วพิมพ์ค้นหาใหม่อีกครั้งนะคะ
                 </p>
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="mt-2 text-sm font-bold text-indigo-600 bg-indigo-50 px-4 py-2 rounded-xl hover:bg-indigo-100"
+                  className="mt-2 text-sm font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-4 py-2 rounded-xl hover:bg-indigo-100"
                 >
                   แสดงทั้งหมด 4 มหาวิทยาลัย
                 </button>
@@ -171,7 +199,7 @@ export default function App() {
         {activeTab === 'bookmarks' && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="font-extrabold text-slate-900 text-lg sm:text-xl flex items-center gap-2">
+              <h2 className="font-extrabold text-slate-900 dark:text-white text-lg sm:text-xl flex items-center gap-2">
                 <Bookmark className="w-5 h-5 text-amber-500 fill-current" />
                 <span>มหาวิทยาลัยที่บันทึกไว้ ({bookmarkedIds.length})</span>
               </h2>
@@ -194,15 +222,15 @@ export default function App() {
                   ))}
               </div>
             ) : (
-              <div className="bg-white rounded-3xl border border-slate-300 p-10 text-center space-y-3">
+              <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-300 dark:border-slate-700 p-10 text-center space-y-3">
                 <span className="text-4xl">⭐</span>
-                <h3 className="font-bold text-slate-900 text-base">ยังไม่มีมหาวิทยาลัยที่บันทึกไว้</h3>
-                <p className="text-sm text-slate-600 max-w-xs mx-auto">
+                <h3 className="font-bold text-slate-900 dark:text-white text-base">ยังไม่มีมหาวิทยาลัยที่บันทึกไว้</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 max-w-xs mx-auto">
                   กดไอคอนบุ๊กมาร์ก (ริบบิ้น) ที่มุมบนขวาของการ์ด เพื่อบันทึกมหาวิทยาลัยที่สนใจไว้ดูทีหลังได้ค่ะ
                 </p>
                 <button
                   onClick={() => setActiveTab('cards')}
-                  className="text-sm font-bold text-indigo-600 bg-indigo-50 px-4 py-2 rounded-xl hover:bg-indigo-100"
+                  className="text-sm font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-4 py-2 rounded-xl hover:bg-indigo-100"
                 >
                   กลับไปดูรายชื่อทั้งหมด
                 </button>
@@ -213,12 +241,12 @@ export default function App() {
       </main>
 
       {/* Footer info */}
-      <footer className="max-w-3xl w-full mx-auto px-4 py-8 text-center text-slate-500 border-t border-slate-200 mt-10 space-y-2">
-        <div className="flex items-center justify-center gap-1.5 text-xs sm:text-sm text-slate-600 font-medium">
-          <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
-          <span>เชื่อมต่อข้อมูลตรงจาก: <code className="bg-slate-200 px-1.5 py-0.5 rounded font-mono text-xs text-slate-800">{metadata.sourceExcel || 'สรุป_TCAS70_Port_จิตวิทยา.xlsx'}</code></span>
+      <footer className="max-w-3xl w-full mx-auto px-4 py-8 text-center text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-800 mt-10 space-y-2">
+        <div className="flex items-center justify-center gap-1.5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium">
+          <FileSpreadsheet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+          <span>เชื่อมต่อข้อมูลตรงจาก: <code className="bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono text-xs text-slate-800 dark:text-slate-200">{metadata.sourceExcel || 'สรุป_TCAS70_Port_จิตวิทยา.xlsx'}</code></span>
         </div>
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-slate-400 dark:text-slate-500">
           จัดทำขึ้นเพื่อให้เพื่อนเปิดอ่านข้อมูลบนมือถือได้สะดวกและรวดเร็ว • พร้อม Deploy บน Vercel
         </p>
       </footer>
