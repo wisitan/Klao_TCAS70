@@ -156,7 +156,7 @@ export default function App() {
           <div className="space-y-4">
             {/* Quick University Direct-Access Bar (4 Universities) */}
             <div>
-              <div className="text-xs font-bold text-slate-400 dark:text-slate-500 mb-1.5 px-1">
+              <div className="text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mb-1.5 px-1">
                 แตะเพื่อเปิดดูข้อมูลมหาวิทยาลัยโดยตรง:
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -164,18 +164,18 @@ export default function App() {
                   <button
                     key={u.id}
                     onClick={() => setActiveModalUniId(u.id)}
-                    className="p-2.5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all text-left group active:scale-95 flex items-center justify-between"
+                    className="p-3 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md transition-all text-left group active:scale-95 flex items-center justify-between"
                   >
                     <div className="min-w-0 pr-1">
-                      <div className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                      <div className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                         {u.shortName}
                       </div>
-                      <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                      <div className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 truncate">
                         คณะ{u.faculty}
                       </div>
                     </div>
                     {/* Fixed Degree Badge with High Contrast in Dark Mode */}
-                    <span className={`text-[10px] font-extrabold px-1.5 py-0.5 rounded-lg border shrink-0 ${getUniBadgeStyle(u)}`}>
+                    <span className={`text-xs font-extrabold px-2 py-0.5 rounded-lg border shrink-0 ${getUniBadgeStyle(u)}`}>
                       {u.degreeType || 'วท.บ.'}
                     </span>
                   </button>
@@ -191,7 +191,7 @@ export default function App() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="ค้นหาข้อมูลเกณฑ์ (เช่น GPAX 3.00, TCASFolio, คลินิก)..."
-                className="w-full pl-10 pr-9 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm transition-all"
+                className="w-full pl-10 pr-9 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm sm:text-base text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm transition-all"
               />
               {searchQuery && (
                 <button

@@ -366,9 +366,9 @@ export default function TimelineCalendar({ onSelectUni }) {
         <div className="space-y-4 animate-fadeIn">
           {/* Month Selector Pills (Scrollable) */}
           <div>
-            <div className="flex items-center justify-between text-xs font-bold text-slate-400 dark:text-slate-500 mb-1 px-1">
+            <div className="flex items-center justify-between text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 mb-1.5 px-1">
               <span>เลือกเดือนที่ต้องการดู:</span>
-              <span className="text-[11px] text-indigo-600 dark:text-indigo-400">เลื่อนซ้าย-ขวาได้ ↔️</span>
+              <span className="text-xs sm:text-sm text-indigo-600 dark:text-indigo-400">เลื่อนซ้าย-ขวาได้ ↔️</span>
             </div>
             <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
               {monthsData.map((m, idx) => {
@@ -378,15 +378,15 @@ export default function TimelineCalendar({ onSelectUni }) {
                   <button
                     key={m.id}
                     onClick={() => setSelectedMonthIdx(idx)}
-                    className={`shrink-0 px-3.5 py-2 rounded-2xl border text-center transition-all ${
+                    className={`shrink-0 px-4 py-2.5 rounded-2xl border text-center transition-all ${
                       isSelected
                         ? 'bg-indigo-600 text-white border-indigo-600 shadow-md scale-105'
                         : 'bg-slate-50 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
                     }`}
                   >
-                    <div className="text-xs sm:text-sm font-extrabold">{m.shortName}</div>
+                    <div className="text-sm sm:text-base font-extrabold">{m.shortName}</div>
                     <div
-                      className={`text-[10px] mt-0.5 font-semibold ${
+                      className={`text-xs mt-0.5 font-semibold ${
                         isSelected
                           ? 'text-indigo-100'
                           : 'text-slate-400 dark:text-slate-400'
@@ -473,7 +473,7 @@ export default function TimelineCalendar({ onSelectUni }) {
                           gridColumnStart: evt.colStart + 1,
                           gridColumnEnd: evt.colEnd + 2
                         }}
-                        className={`h-7 sm:h-8 px-2 flex items-center justify-between text-left text-xs font-bold transition-transform active:scale-[0.99] hover:brightness-105 cursor-pointer select-none ${
+                        className={`h-7 sm:h-8 px-2 flex items-center justify-between text-left text-xs sm:text-sm font-bold transition-transform active:scale-[0.99] hover:brightness-105 cursor-pointer select-none ${
                           evt.barStyle
                         } ${
                           evt.isStart ? 'rounded-l-xl' : 'rounded-l-none border-l-0 pl-1'
@@ -484,16 +484,16 @@ export default function TimelineCalendar({ onSelectUni }) {
                       >
                         <span className="truncate flex items-center gap-1">
                           <span className="font-extrabold">{evt.uniName}</span>
-                          <span className="font-normal opacity-90 truncate hidden xs:inline">
+                          <span className="font-medium opacity-95 truncate hidden xs:inline">
                             {evt.faculty}
                           </span>
-                          <span className="text-[10px] font-normal opacity-85 shrink-0">
+                          <span className="text-xs font-normal opacity-90 shrink-0">
                             ({evt.round})
                           </span>
                         </span>
 
                         {evt.isEnd && (
-                          <span className="text-[9px] uppercase px-1.5 py-0.2 rounded bg-black/25 shrink-0 font-mono ml-1 hidden sm:inline">
+                          <span className="text-[10px] uppercase px-1.5 py-0.5 rounded bg-black/25 shrink-0 font-mono ml-1 hidden sm:inline">
                             ปิดรับ
                           </span>
                         )}
@@ -509,7 +509,7 @@ export default function TimelineCalendar({ onSelectUni }) {
 
           {/* Monthly Events Summary List (Clickable cards to open popup) */}
           <div className="space-y-2.5 pt-2">
-            <div className="text-xs font-bold text-slate-500 dark:text-slate-400 px-1">
+            <div className="text-sm font-bold text-slate-500 dark:text-slate-400 px-1">
               สรุปช่วงเวลารับสมัครในเดือน {selectedMonth.shortName} (แตะเพื่อเปิดดู):
             </div>
 
@@ -518,40 +518,40 @@ export default function TimelineCalendar({ onSelectUni }) {
                 <div
                   key={evt.id}
                   onClick={() => onSelectUni?.(evt.uniId)}
-                  className="p-3.5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 transition-all cursor-pointer flex items-center justify-between gap-3 active:scale-[0.99] group"
+                  className="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 transition-all cursor-pointer flex items-center justify-between gap-3 active:scale-[0.99] group"
                 >
                   <div className="flex items-start gap-3">
                     <div className="text-center shrink-0 py-1 px-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-900 text-indigo-800 dark:text-indigo-200">
                       <Clock className="w-4 h-4 text-indigo-600 dark:text-indigo-400 mx-auto mb-0.5" />
-                      <div className="text-[10px] font-extrabold leading-tight">{evt.uniName}</div>
+                      <div className="text-xs font-extrabold leading-tight">{evt.uniName}</div>
                     </div>
 
                     <div>
                       <div className="flex items-center gap-2 mb-0.5">
-                        <span className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                        <span className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                           {evt.uniName} • คณะ{evt.faculty}
                         </span>
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${evt.badgeColor}`}>
+                        <span className={`text-xs font-bold px-2.5 py-0.5 rounded-md ${evt.badgeColor}`}>
                           {evt.round}
                         </span>
                       </div>
-                      <div className="text-xs font-bold text-indigo-700 dark:text-indigo-300">
+                      <div className="text-sm sm:text-base font-bold text-indigo-700 dark:text-indigo-300">
                         {evt.periodText}
                       </div>
-                      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mt-0.5">
+                      <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mt-0.5">
                         {evt.note}
                       </p>
                     </div>
                   </div>
 
-                  <div className="shrink-0 text-xs font-semibold text-indigo-600 dark:text-indigo-400 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                  <div className="shrink-0 text-sm font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
                     <span className="hidden sm:inline">ดูข้อมูล</span>
                     <ChevronRight className="w-4 h-4" />
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-xs text-slate-400 text-center py-2">
+              <p className="text-sm text-slate-400 text-center py-2">
                 ไม่มีกิจกรรมเปิดรับสมัครใหม่ในเดือนนี้
               </p>
             )}
@@ -599,30 +599,30 @@ export default function TimelineCalendar({ onSelectUni }) {
                 className="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600 transition-all cursor-pointer active:scale-[0.99] hover:shadow-md"
               >
                 <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1.5">
-                  <span className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
+                  <span className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
                     <Clock className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                     {item.periodText}
                   </span>
 
                   <div className="flex items-center gap-1.5">
-                    <span className={`text-xs font-bold px-2.5 py-0.5 rounded-md ${item.badgeColor}`}>
+                    <span className={`text-xs sm:text-sm font-bold px-3 py-1 rounded-lg ${item.badgeColor}`}>
                       {item.uniName}
                     </span>
-                    <span className="text-xs font-medium px-2 py-0.5 rounded-md bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-300">
+                    <span className="text-xs sm:text-sm font-medium px-2.5 py-1 rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-300">
                       {item.round}
                     </span>
                   </div>
                 </div>
 
-                <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white mb-1">
+                <h4 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white mb-1">
                   {item.uniName} • คณะ{item.faculty}
                 </h4>
 
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-2">
+                <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-2">
                   {item.note}
                 </p>
 
-                <div className="flex items-center text-xs font-bold text-indigo-600 dark:text-indigo-400 gap-1">
+                <div className="flex items-center text-sm font-bold text-indigo-600 dark:text-indigo-400 gap-1">
                   <span>แตะเพื่อดูรายละเอียดเกณฑ์พอร์ตทั้งหมด</span>
                   <ChevronRight className="w-4 h-4" />
                 </div>
@@ -633,8 +633,8 @@ export default function TimelineCalendar({ onSelectUni }) {
       )}
 
       {/* Bottom Guidance Hint */}
-      <div className="bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60 rounded-2xl p-3.5 flex items-start gap-2.5 text-xs sm:text-sm text-indigo-900 dark:text-indigo-200 leading-relaxed">
-        <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
+      <div className="bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60 rounded-2xl p-4 flex items-start gap-2.5 text-sm sm:text-base text-indigo-900 dark:text-indigo-200 leading-relaxed">
+        <Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
         <span>
           <strong>คำแนะนำสำคัญ:</strong> สำหรับ <strong>มศว</strong> และ <strong>ม.เกษตรฯ</strong> ให้เตรียมตัวยื่นใน <strong>รอบ 1.2 (ธ.ค. 69 และ ม.ค. 70)</strong> ซึ่งเป็นรอบที่เปิดรับจิตวิทยาโดยเฉพาะค่ะ
         </span>

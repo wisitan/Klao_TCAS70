@@ -42,10 +42,10 @@ export default function UniversityModal({
         {/* Sticky Close Button Bar */}
         <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shrink-0">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">
+            <span className="text-sm font-bold px-3 py-0.5 rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">
               รายละเอียดหลักสูตร
             </span>
-            <span className="text-xs font-medium text-slate-400 dark:text-slate-500">
+            <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">
               {uni.shortName}
             </span>
           </div>

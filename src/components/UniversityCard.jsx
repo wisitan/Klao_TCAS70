@@ -90,14 +90,14 @@ ${uni.portGuidelines.slice(0, 300)}...
             </div>
             <div>
               <div className="flex items-center gap-1.5 mb-0.5">
-                <span className="text-xs font-semibold tracking-wide uppercase px-2 py-0.5 rounded-md bg-black/25 backdrop-blur-sm inline-block">
+                <span className="text-xs sm:text-sm font-bold tracking-wide uppercase px-2.5 py-0.5 rounded-md bg-black/25 backdrop-blur-sm inline-block">
                   {uni.degreeType || 'ปริญญาตรี'}
                 </span>
               </div>
-              <h2 className="text-lg sm:text-xl font-bold leading-tight">
+              <h2 className="text-xl sm:text-2xl font-extrabold leading-tight">
                 {uni.university}
               </h2>
-              <p className="text-xs sm:text-sm text-white/90">
+              <p className="text-sm sm:text-base text-white/95 font-medium">
                 คณะ{uni.faculty} • สาขา{uni.major}
               </p>
             </div>
@@ -136,18 +136,18 @@ ${uni.portGuidelines.slice(0, 300)}...
         {/* Metric Grid (GPAX & Quota Seats) */}
         <div className="grid grid-cols-2 gap-3">
           {/* GPAX Box */}
-          <div className="bg-slate-50 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 flex flex-col justify-between">
-            <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-xs font-medium mb-1">
+          <div className="bg-slate-50 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 sm:p-3.5 flex flex-col justify-between">
+            <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-semibold mb-1">
               <Award className="w-4 h-4 text-amber-500" />
               <span>เกรดเฉลี่ย (GPAX)</span>
             </div>
             <div>
               {uni.gpaxMin ? (
-                <div className="text-emerald-700 dark:text-emerald-400 font-extrabold text-base sm:text-lg">
+                <div className="text-emerald-700 dark:text-emerald-400 font-extrabold text-lg sm:text-xl">
                   {uni.gpaxMin} ขึ้นไป
                 </div>
               ) : (
-                <div className="text-slate-600 dark:text-slate-300 font-medium text-sm">
+                <div className="text-slate-600 dark:text-slate-300 font-medium text-sm sm:text-base">
                   ตามประกาศฉบับเต็ม
                 </div>
               )}
@@ -155,35 +155,35 @@ ${uni.portGuidelines.slice(0, 300)}...
           </div>
 
           {/* Quota Seats Box */}
-          <div className="bg-slate-50 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 flex flex-col justify-between">
-            <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-xs font-medium mb-1">
+          <div className="bg-slate-50 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 sm:p-3.5 flex flex-col justify-between">
+            <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-semibold mb-1">
               <Users className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
               <span>จำนวนรับรอบ Port</span>
             </div>
-            <div className="text-slate-900 dark:text-white font-bold text-sm sm:text-base line-clamp-2">
+            <div className="text-slate-900 dark:text-white font-bold text-base sm:text-lg line-clamp-2">
               {uni.quotaCount.includes('คน') ? uni.quotaCount.split('\n')[0] : 'ตามประกาศ'}
             </div>
           </div>
         </div>
 
         {/* Timeline Box */}
-        <div className="space-y-2 bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-900/60 rounded-2xl p-3.5 text-slate-800 dark:text-slate-200">
+        <div className="space-y-2 bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-900/60 rounded-2xl p-3.5 sm:p-4 text-slate-800 dark:text-slate-200">
           <div className="flex items-start gap-2.5">
             <Calendar className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
             <div className="flex-1">
-              <span className="font-bold text-slate-900 dark:text-white text-sm block mb-0.5">
+              <span className="font-extrabold text-slate-900 dark:text-white text-base sm:text-lg block mb-1">
                 วันรับสมัครรอบ Port:
               </span>
-              <p className="text-slate-700 dark:text-slate-300 whitespace-pre-line leading-relaxed text-sm">
+              <p className="text-slate-700 dark:text-slate-200 whitespace-pre-line leading-relaxed text-sm sm:text-base font-medium">
                 {uni.portDate}
               </p>
             </div>
           </div>
 
           {uni.quotaRoundDate && (
-            <div className="pt-2 border-t border-indigo-200/60 dark:border-indigo-900/60 flex items-center justify-between text-xs sm:text-sm">
+            <div className="pt-2.5 border-t border-indigo-200/60 dark:border-indigo-900/60 flex items-center justify-between text-sm sm:text-base">
               <span className="text-slate-600 dark:text-slate-400 font-medium">รอบโควต้า:</span>
-              <span className="font-bold text-indigo-900 dark:text-indigo-200 bg-white dark:bg-slate-800 px-2.5 py-0.5 rounded-lg border border-indigo-200 dark:border-indigo-800">
+              <span className="font-bold text-indigo-900 dark:text-indigo-200 bg-white dark:bg-slate-800 px-3 py-1 rounded-lg border border-indigo-200 dark:border-indigo-800 text-xs sm:text-sm">
                 {uni.quotaRoundDate}
               </span>
             </div>
@@ -193,7 +193,7 @@ ${uni.portGuidelines.slice(0, 300)}...
         {/* Tracks / Specializations in Body (Moved from Header to keep Header slim) */}
         {uni.tracks && uni.tracks.length > 0 && (
           <div className="space-y-1.5 pt-1">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400">
+            <div className="flex items-center gap-1.5 text-sm font-bold text-slate-600 dark:text-slate-300">
               <GraduationCap className="w-4 h-4 text-indigo-500" />
               <span>วิชาเอก / แขนงที่เปิดสอน:</span>
             </div>
@@ -201,7 +201,7 @@ ${uni.portGuidelines.slice(0, 300)}...
               {uni.tracks.map((track, idx) => (
                 <span
                   key={idx}
-                  className="bg-indigo-50 dark:bg-slate-700 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-slate-600 px-2.5 py-1 rounded-xl text-xs sm:text-sm font-medium"
+                  className="bg-indigo-50 dark:bg-slate-700 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-slate-600 px-3 py-1.5 rounded-xl text-sm font-semibold"
                 >
                   {track}
                 </span>
@@ -215,11 +215,11 @@ ${uni.portGuidelines.slice(0, 300)}...
           <div className="space-y-3 pt-2 animate-fadeIn border-t border-slate-200 dark:border-slate-700">
             {/* Guidelines Box */}
             <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/70 rounded-2xl p-4 space-y-2">
-              <div className="flex items-center gap-2 font-bold text-amber-950 dark:text-amber-200 text-sm sm:text-base">
+              <div className="flex items-center gap-2 font-extrabold text-amber-950 dark:text-amber-200 text-base sm:text-lg">
                 <FileText className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
                 <span>แนวทางการทำ Portfolio & เกณฑ์คัดเลือก</span>
               </div>
-              <div className="text-slate-800 dark:text-slate-200 whitespace-pre-line leading-relaxed text-sm pl-1">
+              <div className="text-slate-800 dark:text-slate-200 whitespace-pre-line leading-relaxed text-sm sm:text-base pl-1">
                 {uni.portGuidelines}
               </div>
             </div>
@@ -227,11 +227,11 @@ ${uni.portGuidelines.slice(0, 300)}...
             {/* Quota Details if detailed list */}
             {uni.quotaCount.includes('\n') && (
               <div className="bg-slate-50 dark:bg-slate-700/60 border border-slate-300 dark:border-slate-600 rounded-2xl p-3.5 space-y-1.5">
-                <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-white text-sm">
+                <div className="flex items-center gap-2 font-extrabold text-slate-900 dark:text-white text-base">
                   <Users className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
                   <span>รายละเอียดจำนวนรับแยกตามสาขาวิชาเอก</span>
                 </div>
-                <div className="text-slate-700 dark:text-slate-300 whitespace-pre-line leading-relaxed text-xs sm:text-sm pl-1 font-mono">
+                <div className="text-slate-700 dark:text-slate-300 whitespace-pre-line leading-relaxed text-sm sm:text-base pl-1 font-mono">
                   {uni.quotaCount}
                 </div>
               </div>
@@ -239,11 +239,11 @@ ${uni.portGuidelines.slice(0, 300)}...
 
             {/* Curriculum Info */}
             <div className="bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/60 rounded-2xl p-3.5 space-y-1.5">
-              <div className="flex items-center gap-2 font-bold text-blue-950 dark:text-blue-200 text-sm">
+              <div className="flex items-center gap-2 font-extrabold text-blue-950 dark:text-blue-200 text-base">
                 <BookOpen className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
                 <span>หลักสูตรและวิชาเอกที่เปิดสอน</span>
               </div>
-              <p className="text-slate-800 dark:text-slate-200 whitespace-pre-line leading-relaxed text-xs sm:text-sm pl-1">
+              <p className="text-slate-800 dark:text-slate-200 whitespace-pre-line leading-relaxed text-sm sm:text-base pl-1">
                 {uni.curriculum}
               </p>
             </div>
@@ -253,7 +253,7 @@ ${uni.portGuidelines.slice(0, 300)}...
         {/* Toggle Expand Button */}
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full py-2.5 px-3 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50/50 dark:hover:bg-slate-700/60 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center gap-1.5 transition-all"
+          className="w-full py-3 px-3.5 text-sm sm:text-base font-bold text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50/50 dark:hover:bg-slate-700/60 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center gap-2 transition-all"
         >
           {isExpanded ? (
             <>
@@ -273,7 +273,7 @@ ${uni.portGuidelines.slice(0, 300)}...
           {/* Copy for LINE Chat button */}
           <button
             onClick={handleCopyForLine}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 px-3.5 rounded-2xl text-xs sm:text-sm font-bold transition-all shadow-sm active:scale-[0.98] ${
+            className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl text-sm sm:text-base font-bold transition-all shadow-sm active:scale-[0.98] ${
               copied
                 ? 'bg-emerald-600 text-white'
                 : 'bg-emerald-600 text-white hover:bg-emerald-700'
@@ -297,7 +297,7 @@ ${uni.portGuidelines.slice(0, 300)}...
             href={uni.website}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-1.5 py-3 px-3.5 rounded-2xl text-xs sm:text-sm font-semibold bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-slate-600 hover:text-indigo-600 border border-slate-300 dark:border-slate-600 transition-all shrink-0 active:scale-[0.98]"
+            className="flex items-center justify-center gap-1.5 py-3.5 px-4 rounded-2xl text-sm sm:text-base font-bold bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 hover:bg-indigo-50 dark:hover:bg-slate-600 hover:text-indigo-600 border border-slate-300 dark:border-slate-600 transition-all shrink-0 active:scale-[0.98]"
             title="เปิดเว็บไซต์รับสมัครของมหาวิทยาลัย"
           >
             <span>เปิดเว็บ</span>
