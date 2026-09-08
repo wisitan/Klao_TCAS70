@@ -55,7 +55,7 @@ export default function TimelineCalendar({ onSelectUni }) {
       badgeColor: 'bg-amber-500 text-white',
       barStyle: 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-sm',
       periodText: '14 ก.ย. – 16 ธ.ค. 69 (09.00 - 15.00 น.)',
-      isHighlight: true,
+      isHighlight: false,
       note: 'มธ. เปิดรับยาวต่อเนื่องตลอด 3 เดือน! (ปิดรับ 16 ธ.ค. เวลา 15.00 น.)'
     },
     {
@@ -94,11 +94,11 @@ export default function TimelineCalendar({ onSelectUni }) {
       round: 'รอบ 1.2 (รับ 18 คน)',
       startDate: '2026-12-01',
       endDate: '2026-12-16',
-      badgeColor: 'bg-rose-600 text-white',
-      barStyle: 'bg-gradient-to-r from-rose-600 via-rose-500 to-red-600 text-white shadow-md ring-1 ring-white/50',
+      badgeColor: 'bg-rose-500 text-white',
+      barStyle: 'bg-gradient-to-r from-rose-500 to-red-600 text-white shadow-sm',
       periodText: '1 – 16 ธ.ค. 69',
-      isHighlight: true,
-      note: '⭐ จิตวิทยา มศว เปิดรอบนี้! รับ 18 คน (ส่งผ่านระบบ TCASFolio ไม่เกิน 20 หน้า)'
+      isHighlight: false,
+      note: 'จิตวิทยา มศว เปิดรอบนี้! รับ 18 คน (ส่งผ่านระบบ TCASFolio ไม่เกิน 20 หน้า)'
     },
     {
       id: 'ku-1.2',
@@ -109,10 +109,10 @@ export default function TimelineCalendar({ onSelectUni }) {
       startDate: '2027-01-04',
       endDate: '2027-02-04',
       badgeColor: 'bg-emerald-600 text-white',
-      barStyle: 'bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white shadow-md ring-1 ring-white/50',
+      barStyle: 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-sm',
       periodText: '4 ม.ค. – 4 ก.พ. 70',
-      isHighlight: true,
-      note: '⭐ จิตวิทยา มก. เปิดรอบนี้! รับ 24 คน 4 แขนง (พอร์ตไม่เกิน 10 หน้า A4)'
+      isHighlight: false,
+      note: 'จิตวิทยา มก. เปิดรอบนี้! รับ 24 คน 4 แขนง (พอร์ตไม่เกิน 10 หน้า A4)'
     },
     {
       id: 'tu-quota',
@@ -212,7 +212,7 @@ export default function TimelineCalendar({ onSelectUni }) {
       fullName: 'ธันวาคม 2569',
       year: 2026,
       month: 11, // December
-      isHighlight: true
+      isHighlight: false
     },
     {
       id: 'jan-70',
@@ -220,7 +220,7 @@ export default function TimelineCalendar({ onSelectUni }) {
       fullName: 'มกราคม 2570',
       year: 2027,
       month: 0, // January 2027
-      isHighlight: true
+      isHighlight: false
     },
     {
       id: 'feb-70',
@@ -381,9 +381,7 @@ export default function TimelineCalendar({ onSelectUni }) {
                     className={`shrink-0 px-3.5 py-2 rounded-2xl border text-center transition-all ${
                       isSelected
                         ? 'bg-indigo-600 text-white border-indigo-600 shadow-md scale-105'
-                        : m.isHighlight
-                        ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 border-amber-300 dark:border-amber-700 hover:bg-amber-100'
-                        : 'bg-slate-50 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
+                        : 'bg-slate-50 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
                     }`}
                   >
                     <div className="text-xs sm:text-sm font-extrabold">{m.shortName}</div>
@@ -391,12 +389,10 @@ export default function TimelineCalendar({ onSelectUni }) {
                       className={`text-[10px] mt-0.5 font-semibold ${
                         isSelected
                           ? 'text-indigo-100'
-                          : m.isHighlight
-                          ? 'text-amber-700 dark:text-amber-300'
                           : 'text-slate-400 dark:text-slate-400'
                       }`}
                     >
-                      {m.isHighlight ? 'ไฮไลต์ 🔥' : 'ดูปฏิทิน'}
+                      {isSelected ? 'กำลังดู' : 'ดูปฏิทิน'}
                     </div>
                   </button>
                 )
@@ -487,7 +483,6 @@ export default function TimelineCalendar({ onSelectUni }) {
                         title={`${evt.uniName} • คณะ${evt.faculty} (${evt.periodText}) - แตะเพื่อดูรายละเอียด`}
                       >
                         <span className="truncate flex items-center gap-1">
-                          {evt.isHighlight && <span className="text-[11px]">⭐</span>}
                           <span className="font-extrabold">{evt.uniName}</span>
                           <span className="font-normal opacity-90 truncate hidden xs:inline">
                             {evt.faculty}
@@ -601,11 +596,7 @@ export default function TimelineCalendar({ onSelectUni }) {
               <div
                 key={item.id}
                 onClick={() => onSelectUni?.(item.uniId)}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer active:scale-[0.99] hover:shadow-md ${
-                  item.isHighlight
-                    ? 'bg-amber-50/80 border-amber-300 dark:bg-amber-950/40 dark:border-amber-700/70'
-                    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600'
-                }`}
+                className="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600 transition-all cursor-pointer active:scale-[0.99] hover:shadow-md"
               >
                 <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1.5">
                   <span className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
