@@ -6,57 +6,181 @@ import {
   List,
   CalendarRange,
   ChevronLeft,
-  ChevronRight,
-  ExternalLink,
-  ChevronDown
+  ChevronRight
 } from 'lucide-react'
 
 export default function TimelineCalendar({ onSelectUni }) {
-  const [viewType, setViewType] = useState('month') // 'month' (default as requested!) | 'list'
+  const [viewType, setViewType] = useState('month') // 'month' | 'list'
   const [selectedMonthIdx, setSelectedMonthIdx] = useState(4) // default to 'ธ.ค. 69' (index 4)
   const [timelineMode, setTimelineMode] = useState('port') // 'port' | 'quota' (for List view)
 
-  // University lookup for IDs
-  // uni-1: มศว (มนุษยศาสตร์)
-  // uni-2: ม.เกษตรศาสตร์ (สังคมศาสตร์)
-  // uni-3: ม.ธรรมศาสตร์ (ศิลปศาสตร์)
-  // uni-4: ม.ศิลปากร (สหเวชศาสตร์)
+  // All TCAS 70 Application Periods (with exact ISO date spans for continuous bar rendering)
+  const ALL_EVENTS = [
+    {
+      id: 'swu-1.1',
+      uniId: 'uni-1',
+      uniName: 'มศว',
+      faculty: 'มนุษยศาสตร์',
+      round: 'รอบ 1.1',
+      startDate: '2026-08-18',
+      endDate: '2026-09-16',
+      badgeColor: 'bg-rose-500 text-white',
+      barStyle: 'bg-gradient-to-r from-rose-500 to-red-600 text-white shadow-sm',
+      periodText: '18 ส.ค. – 16 ก.ย. 69',
+      isHighlight: false,
+      note: 'รับสมัครช่วงแรก (แนะนำเช็กกับคณะก่อนว่าจิตวิทยาเปิดรอบนี้ไหม)'
+    },
+    {
+      id: 'su-1',
+      uniId: 'uni-4',
+      uniName: 'ศิลปากร',
+      faculty: 'สหเวชฯ',
+      round: 'ช่วงที่ 1',
+      startDate: '2026-08-20',
+      endDate: '2026-09-08',
+      badgeColor: 'bg-blue-600 text-white',
+      barStyle: 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm',
+      periodText: '20 ส.ค. – 8 ก.ย. 69',
+      isHighlight: false,
+      note: 'หลักสูตรใหม่ รอบพอร์ต ช่วงที่ 1'
+    },
+    {
+      id: 'tu-1',
+      uniId: 'uni-3',
+      uniName: 'มธ.',
+      faculty: 'ศิลปศาสตร์',
+      round: 'รอบ 1 Port',
+      startDate: '2026-09-14',
+      endDate: '2026-12-16',
+      badgeColor: 'bg-amber-500 text-white',
+      barStyle: 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-sm',
+      periodText: '14 ก.ย. – 16 ธ.ค. 69 (09.00 - 15.00 น.)',
+      isHighlight: true,
+      note: 'มธ. เปิดรับยาวต่อเนื่องตลอด 3 เดือน! (ปิดรับ 16 ธ.ค. เวลา 15.00 น.)'
+    },
+    {
+      id: 'ku-1.1',
+      uniId: 'uni-2',
+      uniName: 'ม.เกษตรฯ',
+      faculty: 'สังคมศาสตร์',
+      round: 'รอบ 1.1',
+      startDate: '2026-09-18',
+      endDate: '2026-10-14',
+      badgeColor: 'bg-emerald-600 text-white',
+      barStyle: 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-sm',
+      periodText: '18 ก.ย. – 14 ต.ค. 69',
+      isHighlight: false,
+      note: 'รอบ 1.1 ของมหาวิทยาลัย (สาขาจิตวิทยาจะเปิดรับในรอบ 1.2 ม.ค. 70)'
+    },
+    {
+      id: 'su-2',
+      uniId: 'uni-4',
+      uniName: 'ศิลปากร',
+      faculty: 'สหเวชฯ',
+      round: 'ช่วงที่ 2',
+      startDate: '2026-10-20',
+      endDate: '2026-11-16',
+      badgeColor: 'bg-blue-600 text-white',
+      barStyle: 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm',
+      periodText: '20 ต.ค. – 16 พ.ย. 69',
+      isHighlight: false,
+      note: 'รอบพอร์ต ช่วงที่ 2 ของ ม.ศิลปากร'
+    },
+    {
+      id: 'swu-1.2',
+      uniId: 'uni-1',
+      uniName: 'มศว',
+      faculty: 'มนุษยศาสตร์',
+      round: 'รอบ 1.2 (รับ 18 คน)',
+      startDate: '2026-12-01',
+      endDate: '2026-12-16',
+      badgeColor: 'bg-rose-600 text-white',
+      barStyle: 'bg-gradient-to-r from-rose-600 via-rose-500 to-red-600 text-white shadow-md ring-1 ring-white/50',
+      periodText: '1 – 16 ธ.ค. 69',
+      isHighlight: true,
+      note: '⭐ จิตวิทยา มศว เปิดรอบนี้! รับ 18 คน (ส่งผ่านระบบ TCASFolio ไม่เกิน 20 หน้า)'
+    },
+    {
+      id: 'ku-1.2',
+      uniId: 'uni-2',
+      uniName: 'ม.เกษตรฯ',
+      faculty: 'สังคมศาสตร์',
+      round: 'รอบ 1.2 (รับ 24 คน)',
+      startDate: '2027-01-04',
+      endDate: '2027-02-04',
+      badgeColor: 'bg-emerald-600 text-white',
+      barStyle: 'bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white shadow-md ring-1 ring-white/50',
+      periodText: '4 ม.ค. – 4 ก.พ. 70',
+      isHighlight: true,
+      note: '⭐ จิตวิทยา มก. เปิดรอบนี้! รับ 24 คน 4 แขนง (พอร์ตไม่เกิน 10 หน้า A4)'
+    },
+    {
+      id: 'tu-quota',
+      uniId: 'uni-3',
+      uniName: 'มธ.',
+      faculty: 'ศิลปศาสตร์',
+      round: 'โควต้า',
+      startDate: '2027-03-13',
+      endDate: '2027-03-13',
+      badgeColor: 'bg-amber-600 text-white',
+      barStyle: 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-sm',
+      periodText: '13 มี.ค. 2570',
+      isHighlight: false,
+      note: 'วันรับสมัคร / ยื่นรอบโควต้า มธ.'
+    },
+    {
+      id: 'ku-quota',
+      uniId: 'uni-2',
+      uniName: 'ม.เกษตรฯ',
+      faculty: 'สังคมศาสตร์',
+      round: 'โควต้า',
+      startDate: '2027-03-15',
+      endDate: '2027-03-22',
+      badgeColor: 'bg-emerald-600 text-white',
+      barStyle: 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-sm',
+      periodText: '15 – 22 มี.ค. 2570',
+      isHighlight: false,
+      note: 'วันรับสมัครรอบโควต้า ม.เกษตรศาสตร์'
+    },
+    {
+      id: 'swu-quota',
+      uniId: 'uni-1',
+      uniName: 'มศว',
+      faculty: 'มนุษยศาสตร์',
+      round: 'โควต้า',
+      startDate: '2027-03-15',
+      endDate: '2027-03-30',
+      badgeColor: 'bg-rose-500 text-white',
+      barStyle: 'bg-gradient-to-r from-rose-500 to-red-600 text-white shadow-sm',
+      periodText: '15 – 30 มี.ค. 2570',
+      isHighlight: false,
+      note: 'วันรับสมัครรอบโควต้า มศว'
+    },
+    {
+      id: 'su-quota',
+      uniId: 'uni-4',
+      uniName: 'ศิลปากร',
+      faculty: 'สหเวชฯ',
+      round: 'โควต้า',
+      startDate: '2027-03-16',
+      endDate: '2027-03-30',
+      badgeColor: 'bg-blue-600 text-white',
+      barStyle: 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm',
+      periodText: '16 – 30 มี.ค. 2570',
+      isHighlight: false,
+      note: 'วันรับสมัครรอบโควต้า ม.ศิลปากร'
+    }
+  ]
 
-  // Month-by-month calendar definitions
-  // 2569 B.E. = 2026 C.E. / 2570 B.E. = 2027 C.E.
+  // Month-by-month metadata
   const monthsData = [
     {
       id: 'aug-69',
       shortName: 'ส.ค. 69',
       fullName: 'สิงหาคม 2569',
       year: 2026,
-      month: 7, // 0-indexed: 7 = August
-      daysInMonth: 31,
-      firstDayOfWeek: 6, // 0=Sun, 6=Sat (Aug 1, 2026 is Saturday)
-      dayEvents: {
-        18: [
-          {
-            uniId: 'uni-1',
-            uniName: 'มศว',
-            faculty: 'มนุษยศาสตร์',
-            round: 'เปิดรอบ 1.1',
-            theme: 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-950 dark:text-rose-300 dark:border-rose-800',
-            dot: 'bg-rose-500',
-            desc: 'เริ่มรับสมัครรอบ 1.1 (18 ส.ค. – 16 ก.ย. 69)'
-          }
-        ],
-        20: [
-          {
-            uniId: 'uni-4',
-            uniName: 'ศิลปากร',
-            faculty: 'สหเวชฯ',
-            round: 'เปิดช่วงที่ 1',
-            theme: 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800',
-            dot: 'bg-blue-500',
-            desc: 'เปิดรับรอบพอร์ต ช่วงที่ 1 (20 ส.ค. – 8 ก.ย. 69)'
-          }
-        ]
-      }
+      month: 7, // August (0-indexed)
+      isHighlight: false
     },
     {
       id: 'sep-69',
@@ -64,54 +188,7 @@ export default function TimelineCalendar({ onSelectUni }) {
       fullName: 'กันยายน 2569',
       year: 2026,
       month: 8, // September
-      daysInMonth: 30,
-      firstDayOfWeek: 2, // Sep 1, 2026 is Tuesday
-      dayEvents: {
-        8: [
-          {
-            uniId: 'uni-4',
-            uniName: 'ศิลปากร',
-            faculty: 'สหเวชฯ',
-            round: 'ปิดช่วงที่ 1',
-            theme: 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800',
-            dot: 'bg-blue-500',
-            desc: 'วันสุดท้ายของการรับสมัครช่วงที่ 1'
-          }
-        ],
-        14: [
-          {
-            uniId: 'uni-3',
-            uniName: 'มธ.',
-            faculty: 'ศิลปศาสตร์',
-            round: 'เริ่มรอบ 1 Port',
-            theme: 'bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-950 dark:text-amber-200 dark:border-amber-700',
-            dot: 'bg-amber-500',
-            desc: 'เริ่มรับสมัครรอบ 1 Portfolio (09.00 น.) เปิดรับยาวถึง 16 ธ.ค. 69!'
-          }
-        ],
-        16: [
-          {
-            uniId: 'uni-1',
-            uniName: 'มศว',
-            faculty: 'มนุษยศาสตร์',
-            round: 'ปิดรอบ 1.1',
-            theme: 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-950 dark:text-rose-300 dark:border-rose-800',
-            dot: 'bg-rose-500',
-            desc: 'วันสุดท้ายของการรับสมัครรอบ 1.1'
-          }
-        ],
-        18: [
-          {
-            uniId: 'uni-2',
-            uniName: 'ม.เกษตรฯ',
-            faculty: 'สังคมศาสตร์',
-            round: 'เปิดรอบ 1.1',
-            theme: 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800',
-            dot: 'bg-emerald-500',
-            desc: 'เปิดรับรอบ 1.1 (จิตวิทยาเปิดเฉพาะรอบ 1.2)'
-          }
-        ]
-      }
+      isHighlight: false
     },
     {
       id: 'oct-69',
@@ -119,32 +196,7 @@ export default function TimelineCalendar({ onSelectUni }) {
       fullName: 'ตุลาคม 2569',
       year: 2026,
       month: 9, // October
-      daysInMonth: 31,
-      firstDayOfWeek: 4, // Oct 1, 2026 is Thursday
-      dayEvents: {
-        14: [
-          {
-            uniId: 'uni-2',
-            uniName: 'ม.เกษตรฯ',
-            faculty: 'สังคมศาสตร์',
-            round: 'ปิดรอบ 1.1',
-            theme: 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800',
-            dot: 'bg-emerald-500',
-            desc: 'สิ้นสุดการรับสมัครรอบ 1.1'
-          }
-        ],
-        20: [
-          {
-            uniId: 'uni-4',
-            uniName: 'ศิลปากร',
-            faculty: 'สหเวชฯ',
-            round: 'เปิดช่วงที่ 2',
-            theme: 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800',
-            dot: 'bg-blue-500',
-            desc: 'เริ่มรับสมัครรอบพอร์ต ช่วงที่ 2 (ถึง 16 พ.ย. 69)'
-          }
-        ]
-      }
+      isHighlight: false
     },
     {
       id: 'nov-69',
@@ -152,21 +204,7 @@ export default function TimelineCalendar({ onSelectUni }) {
       fullName: 'พฤศจิกายน 2569',
       year: 2026,
       month: 10, // November
-      daysInMonth: 30,
-      firstDayOfWeek: 0, // Nov 1, 2026 is Sunday
-      dayEvents: {
-        16: [
-          {
-            uniId: 'uni-4',
-            uniName: 'ศิลปากร',
-            faculty: 'สหเวชฯ',
-            round: 'ปิดช่วงที่ 2',
-            theme: 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800',
-            dot: 'bg-blue-500',
-            desc: 'วันสุดท้ายของการรับสมัครรอบพอร์ต ช่วงที่ 2'
-          }
-        ]
-      }
+      isHighlight: false
     },
     {
       id: 'dec-69',
@@ -174,41 +212,7 @@ export default function TimelineCalendar({ onSelectUni }) {
       fullName: 'ธันวาคม 2569',
       year: 2026,
       month: 11, // December
-      daysInMonth: 31,
-      firstDayOfWeek: 2, // Dec 1, 2026 is Tuesday
-      dayEvents: {
-        1: [
-          {
-            uniId: 'uni-1',
-            uniName: '⭐ มศว',
-            faculty: 'มนุษยศาสตร์',
-            round: 'เปิดรอบ 1.2 (รับ 18 คน)',
-            theme: 'bg-rose-200 text-rose-900 border-rose-400 dark:bg-rose-900 dark:text-rose-100 font-bold',
-            dot: 'bg-rose-600',
-            desc: '⭐ จิตวิทยา มศว เปิดรอบนี้! รับ 18 คน (ส่งผ่าน TCASFolio ไม่เกิน 20 หน้า)'
-          }
-        ],
-        16: [
-          {
-            uniId: 'uni-1',
-            uniName: 'มศว',
-            faculty: 'มนุษยศาสตร์',
-            round: 'ปิดรอบ 1.2',
-            theme: 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-950 dark:text-rose-300',
-            dot: 'bg-rose-500',
-            desc: 'สิ้นสุดการรับสมัครรอบ 1.2 มศว'
-          },
-          {
-            uniId: 'uni-3',
-            uniName: 'มธ.',
-            faculty: 'ศิลปศาสตร์',
-            round: 'ปิดรับรอบ 1 (15.00 น.)',
-            theme: 'bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-950 dark:text-amber-200',
-            dot: 'bg-amber-500',
-            desc: 'ปิดรับสมัครโครงการรับตรง รอบที่ 1 Portfolio เวลา 15.00 น.'
-          }
-        ]
-      }
+      isHighlight: true
     },
     {
       id: 'jan-70',
@@ -216,308 +220,98 @@ export default function TimelineCalendar({ onSelectUni }) {
       fullName: 'มกราคม 2570',
       year: 2027,
       month: 0, // January 2027
-      daysInMonth: 31,
-      firstDayOfWeek: 5, // Jan 1, 2027 is Friday
-      dayEvents: {
-        4: [
-          {
-            uniId: 'uni-2',
-            uniName: '⭐ ม.เกษตรฯ',
-            faculty: 'สังคมศาสตร์',
-            round: 'เปิดรอบ 1.2 (รับ 24 คน)',
-            theme: 'bg-emerald-200 text-emerald-900 border-emerald-400 dark:bg-emerald-900 dark:text-emerald-100 font-bold',
-            dot: 'bg-emerald-600',
-            desc: '⭐ จิตวิทยา มก. เปิดรอบนี้! รับ 24 คน 4 วิชาเอก (พอร์ต 10 หน้า)'
-          }
-        ]
-      }
+      isHighlight: true
     },
     {
       id: 'feb-70',
       shortName: 'ก.พ. 70',
       fullName: 'กุมภาพันธ์ 2570',
       year: 2027,
-      month: 1, // February 2027
-      daysInMonth: 28,
-      firstDayOfWeek: 1, // Feb 1, 2027 is Monday
-      dayEvents: {
-        4: [
-          {
-            uniId: 'uni-2',
-            uniName: 'ม.เกษตรฯ',
-            faculty: 'สังคมศาสตร์',
-            round: 'ปิดรับรอบ 1.2',
-            theme: 'bg-emerald-100 text-emerald-900 border-emerald-300 dark:bg-emerald-950 dark:text-emerald-200',
-            dot: 'bg-emerald-600',
-            desc: 'สิ้นสุดการรับสมัครรอบ 1.2 สิ้นสุดรอบ Portfolio ทั้งหมด'
-          }
-        ]
-      }
+      month: 1, // February
+      isHighlight: false
     },
     {
       id: 'mar-70',
       shortName: 'มี.ค. 70',
       fullName: 'มีนาคม 2570',
       year: 2027,
-      month: 2, // March 2027
-      daysInMonth: 31,
-      firstDayOfWeek: 1, // Mar 1, 2027 is Monday
-      dayEvents: {
-        13: [
-          {
-            uniId: 'uni-3',
-            uniName: 'มธ.',
-            faculty: 'ศิลปศาสตร์',
-            round: 'รอบโควต้า',
-            theme: 'bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-950 dark:text-amber-200',
-            dot: 'bg-amber-500',
-            desc: 'วันรับสมัคร / ยื่นรอบโควต้า มธ.'
-          }
-        ],
-        15: [
-          {
-            uniId: 'uni-2',
-            uniName: 'ม.เกษตรฯ',
-            faculty: 'สังคมศาสตร์',
-            round: 'รอบโควต้า',
-            theme: 'bg-emerald-100 text-emerald-900 border-emerald-300 dark:bg-emerald-950 dark:text-emerald-200',
-            dot: 'bg-emerald-600',
-            desc: 'เริ่มรับสมัครรอบโควต้า ม.เกษตรฯ (ถึง 22 มี.ค. 70)'
-          },
-          {
-            uniId: 'uni-1',
-            uniName: 'มศว',
-            faculty: 'มนุษยศาสตร์',
-            round: 'รอบโควต้า',
-            theme: 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-950 dark:text-rose-200',
-            dot: 'bg-rose-600',
-            desc: 'เริ่มรับสมัครรอบโควต้า มศว (ถึง 30 มี.ค. 70)'
-          }
-        ],
-        16: [
-          {
-            uniId: 'uni-4',
-            uniName: 'ศิลปากร',
-            faculty: 'สหเวชฯ',
-            round: 'รอบโควต้า',
-            theme: 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-950 dark:text-blue-300',
-            dot: 'bg-blue-500',
-            desc: 'เริ่มรับสมัครรอบโควต้า ม.ศิลปากร (ถึง 30 มี.ค. 70)'
-          }
-        ]
-      }
+      month: 2, // March
+      isHighlight: false
     }
   ]
 
-  // List View Timeline Data
-  const portTimeline = [
-    {
-      uniId: 'uni-1',
-      period: '18 ส.ค. – 16 ก.ย. 69',
-      uni: 'มศว',
-      faculty: 'มนุษยศาสตร์',
-      round: 'รอบ 1.1',
-      badgeColor: 'bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-950 dark:text-rose-300 dark:border-rose-800',
-      dotColor: 'bg-rose-500',
-      note: 'รับสมัครช่วงแรก (แนะนำเช็กกับคณะก่อนว่าจิตวิทยาเปิดรอบนี้ไหม)',
-      isHighlight: false
-    },
-    {
-      uniId: 'uni-4',
-      period: '20 ส.ค. – 8 ก.ย. 69',
-      uni: 'ม.ศิลปากร',
-      faculty: 'สหเวชศาสตร์ (เพชรบุรี)',
-      round: 'รอบพอร์ต ช่วงที่ 1',
-      badgeColor: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800',
-      dotColor: 'bg-blue-500',
-      note: 'หลักสูตรใหม่ รอติดตามประกาศยืนยันจากคณะโดยตรง',
-      isHighlight: false
-    },
-    {
-      uniId: 'uni-3',
-      period: '14 ก.ย. – 16 ธ.ค. 69',
-      uni: 'ม.ธรรมศาสตร์',
-      faculty: 'ศิลปศาสตร์',
-      round: 'รอบที่ 1 Portfolio',
-      badgeColor: 'bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-950 dark:text-amber-200 dark:border-amber-700',
-      dotColor: 'bg-amber-500',
-      note: 'เปิดรับยาวตลอด 3 เดือน! (ปิดรับ 16 ธ.ค. เวลา 15.00 น.)',
-      isHighlight: true
-    },
-    {
-      uniId: 'uni-2',
-      period: '18 ก.ย. – 14 ต.ค. 69',
-      uni: 'ม.เกษตรศาสตร์',
-      faculty: 'สังคมศาสตร์',
-      round: 'รอบ 1.1',
-      badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800',
-      dotColor: 'bg-emerald-500',
-      note: 'รอบ 1.1 ของมหาวิทยาลัย (แต่สาขาจิตวิทยาเปิดเฉพาะรอบ 1.2)',
-      isHighlight: false
-    },
-    {
-      uniId: 'uni-4',
-      period: '20 ต.ค. – 16 พ.ย. 69',
-      uni: 'ม.ศิลปากร',
-      faculty: 'สหเวชศาสตร์ (เพชรบุรี)',
-      round: 'รอบพอร์ต ช่วงที่ 2',
-      badgeColor: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800',
-      dotColor: 'bg-blue-500',
-      note: 'ช่วงที่ 2 ของ ม.ศิลปากร (ติดตามประกาศสาขาจิตวิทยา)',
-      isHighlight: false
-    },
-    {
-      uniId: 'uni-1',
-      period: '1 – 16 ธ.ค. 69',
-      uni: 'มศว',
-      faculty: 'มนุษยศาสตร์',
-      round: 'รอบ 1.2',
-      badgeColor: 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-950 dark:text-rose-200 dark:border-rose-700',
-      dotColor: 'bg-rose-600',
-      note: '⭐ จิตวิทยา มศว เปิดรอบนี้! รับ 18 คน (ส่งผ่าน TCASFolio เท่านั้น)',
-      isHighlight: true
-    },
-    {
-      uniId: 'uni-2',
-      period: '4 ม.ค. – 4 ก.พ. 70',
-      uni: 'ม.เกษตรศาสตร์',
-      faculty: 'สังคมศาสตร์',
-      round: 'รอบ 1.2',
-      badgeColor: 'bg-emerald-100 text-emerald-900 border-emerald-300 dark:bg-emerald-950 dark:text-emerald-200 dark:border-emerald-700',
-      dotColor: 'bg-emerald-600',
-      note: '⭐ จิตวิทยา มก. เปิดรอบนี้! รับ 24 คน (4 แขนงวิชาเอก)',
-      isHighlight: true
-    }
-  ]
-
-  const quotaTimeline = [
-    {
-      uniId: 'uni-3',
-      period: '13 มี.ค. 2570',
-      uni: 'ม.ธรรมศาสตร์',
-      faculty: 'ศิลปศาสตร์',
-      round: 'รอบโควต้า',
-      badgeColor: 'bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-950 dark:text-amber-200 dark:border-amber-700',
-      dotColor: 'bg-amber-500',
-      note: 'วันรับสมัคร / ยื่นโควต้า มธ.'
-    },
-    {
-      uniId: 'uni-2',
-      period: '15 – 22 มี.ค. 2570',
-      uni: 'ม.เกษตรศาสตร์',
-      faculty: 'สังคมศาสตร์',
-      round: 'รอบโควต้า',
-      badgeColor: 'bg-emerald-100 text-emerald-900 border-emerald-300 dark:bg-emerald-950 dark:text-emerald-200 dark:border-emerald-700',
-      dotColor: 'bg-emerald-600',
-      note: 'วันรับสมัครรอบโควต้า ม.เกษตรศาสตร์'
-    },
-    {
-      uniId: 'uni-1',
-      period: '15 – 30 มี.ค. 2570',
-      uni: 'มศว',
-      faculty: 'มนุษยศาสตร์',
-      round: 'รอบโควต้า',
-      badgeColor: 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-950 dark:text-rose-200 dark:border-rose-700',
-      dotColor: 'bg-rose-600',
-      note: 'วันรับสมัครรอบโควต้า มหาวิทยาลัยศรีนครินทรวิโรฒ'
-    },
-    {
-      uniId: 'uni-4',
-      period: '16 – 30 มี.ค. 2570',
-      uni: 'ม.ศิลปากร',
-      faculty: 'สหเวชศาสตร์ (เพชรบุรี)',
-      round: 'รอบโควต้า',
-      badgeColor: 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-950 dark:text-blue-300 dark:border-blue-800',
-      dotColor: 'bg-blue-500',
-      note: 'วันรับสมัครรอบโควต้า มหาวิทยาลัยศิลปากร'
-    }
-  ]
-
-  const activeListEvents = timelineMode === 'port' ? portTimeline : quotaTimeline
   const selectedMonth = monthsData[selectedMonthIdx] || monthsData[4]
 
-  // Helper to build 7-column calendar grid
-  const renderMonthGrid = () => {
-    const days = []
-    const weekDays = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส']
+  // Calculate weeks grid with continuous multi-day spanning bars
+  const getMonthWeeksWithSpans = () => {
+    const { year, month } = selectedMonth
+    const firstDayOfMonth = new Date(year, month, 1)
+    const startDayOfWeek = firstDayOfMonth.getDay() // 0 = Sun
+    const startDate = new Date(year, month, 1 - startDayOfWeek)
 
-    // Empty padding slots before 1st of month
-    for (let i = 0; i < selectedMonth.firstDayOfWeek; i++) {
-      days.push(
-        <div
-          key={`pad-${i}`}
-          className="min-h-[72px] sm:min-h-[85px] bg-slate-50/50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-800/60 rounded-xl"
-        ></div>
-      )
+    const lastDayOfMonth = new Date(year, month + 1, 0)
+    const endDayOfWeek = lastDayOfMonth.getDay()
+    const endDate = new Date(year, month, lastDayOfMonth.getDate() + (6 - endDayOfWeek))
+
+    const weeks = []
+    let curr = new Date(startDate)
+
+    while (curr <= endDate) {
+      const weekDays = []
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(curr)
+        const isCurrentMonth = d.getMonth() === month
+        const isoStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+        weekDays.push({
+          dayNumber: d.getDate(),
+          isCurrentMonth,
+          isoStr,
+          dayOfWeek: i
+        })
+        curr.setDate(curr.getDate() + 1)
+      }
+
+      // Check overlapping multi-day events in this week
+      const weekStartIso = weekDays[0].isoStr
+      const weekEndIso = weekDays[6].isoStr
+      const weekEvents = []
+
+      for (const evt of ALL_EVENTS) {
+        const overlapStart = evt.startDate > weekStartIso ? evt.startDate : weekStartIso
+        const overlapEnd = evt.endDate < weekEndIso ? evt.endDate : weekEndIso
+
+        if (overlapStart <= overlapEnd) {
+          const colStart = weekDays.findIndex((w) => w.isoStr === overlapStart)
+          const colEnd = weekDays.findIndex((w) => w.isoStr === overlapEnd)
+
+          if (colStart !== -1 && colEnd !== -1) {
+            weekEvents.push({
+              ...evt,
+              colStart,
+              colEnd,
+              isStart: evt.startDate === overlapStart,
+              isEnd: evt.endDate === overlapEnd
+            })
+          }
+        }
+      }
+
+      weeks.push({ weekDays, weekEvents })
     }
 
-    // Days in current month
-    for (let d = 1; d <= selectedMonth.daysInMonth; d++) {
-      const events = selectedMonth.dayEvents[d] || []
-      const hasEvent = events.length > 0
-
-      days.push(
-        <div
-          key={`day-${d}`}
-          className={`min-h-[72px] sm:min-h-[85px] p-1 sm:p-1.5 rounded-xl border flex flex-col justify-between transition-all ${
-            hasEvent
-              ? 'bg-white dark:bg-slate-800 border-indigo-200 dark:border-indigo-900/60 shadow-sm ring-1 ring-indigo-500/10'
-              : 'bg-white/70 dark:bg-slate-800/40 border-slate-100 dark:border-slate-800 text-slate-400'
-          }`}
-        >
-          {/* Day Number */}
-          <div className="flex items-center justify-between">
-            <span
-              className={`text-xs font-bold leading-none px-1 py-0.5 rounded ${
-                hasEvent
-                  ? 'bg-indigo-100 dark:bg-indigo-900/60 text-indigo-800 dark:text-indigo-200'
-                  : 'text-slate-500 dark:text-slate-400'
-              }`}
-            >
-              {d}
-            </span>
-          </div>
-
-          {/* Mini Event Cards/Chips inside Day Cell */}
-          <div className="space-y-1 mt-1 flex-1 flex flex-col justify-end">
-            {events.map((evt, eIdx) => (
-              <button
-                key={eIdx}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onSelectUni?.(evt.uniId)
-                }}
-                className={`w-full text-left p-1 rounded-lg border text-[10px] sm:text-xs leading-tight transition-transform active:scale-95 hover:shadow-md cursor-pointer ${evt.theme}`}
-                title="กดเพื่อเปิดดูข้อมูลเต็มของมหาวิทยาลัยนี้"
-              >
-                <div className="font-extrabold truncate">{evt.uniName}</div>
-                <div className="truncate text-[9px] sm:text-[10px] opacity-90">{evt.faculty}</div>
-                <div className="truncate text-[9px] font-semibold text-indigo-700 dark:text-indigo-300 mt-0.5">
-                  {evt.round}
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      )
-    }
-
-    return (
-      <div className="space-y-1.5">
-        {/* Weekday headers */}
-        <div className="grid grid-cols-7 gap-1 text-center text-xs font-bold text-slate-400 dark:text-slate-500 py-1">
-          {weekDays.map((w, idx) => (
-            <div key={idx} className={idx === 0 || idx === 6 ? 'text-rose-500/80' : ''}>
-              {w}
-            </div>
-          ))}
-        </div>
-
-        {/* 7-column Calendar Grid */}
-        <div className="grid grid-cols-7 gap-1 sm:gap-1.5">{days}</div>
-      </div>
-    )
+    return weeks
   }
+
+  const weeks = getMonthWeeksWithSpans()
+  const weekDayNames = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส']
+
+  // Events active in this month for the bottom summary list
+  const activeEventsInSelectedMonth = ALL_EVENTS.filter((evt) => {
+    const monthStartIso = `${selectedMonth.year}-${String(selectedMonth.month + 1).padStart(2, '0')}-01`
+    const lastDay = new Date(selectedMonth.year, selectedMonth.month + 1, 0).getDate()
+    const monthEndIso = `${selectedMonth.year}-${String(selectedMonth.month + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`
+    return evt.startDate <= monthEndIso && evt.endDate >= monthStartIso
+  })
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-4 sm:p-5 shadow-sm space-y-4 mb-6 transition-colors">
@@ -532,7 +326,7 @@ export default function TimelineCalendar({ onSelectUni }) {
               ปฏิทินรับสมัคร TCAS 70 (จิตวิทยา)
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-              แตะที่กิจกรรมเพื่อเปิดดูรายละเอียดและเกณฑ์พอร์ตฉบับเต็ม
+              แถบสีลากยาวตามช่วงเวลารับสมัครจริง • แตะเพื่อดูรายละเอียด
             </p>
           </div>
         </div>
@@ -566,7 +360,7 @@ export default function TimelineCalendar({ onSelectUni }) {
       </div>
 
       {/* ======================================================== */}
-      {/* 1. MONTH GRID VIEW (ตารางปฏิทินเต็มเดือน + การ์ดเล็กมหาลัย/คณะ) */}
+      {/* 1. MONTH GRID VIEW (แถบสีลากยาวตามวันที่รับสมัครจริง) */}
       {/* ======================================================== */}
       {viewType === 'month' && (
         <div className="space-y-4 animate-fadeIn">
@@ -579,32 +373,30 @@ export default function TimelineCalendar({ onSelectUni }) {
             <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
               {monthsData.map((m, idx) => {
                 const isSelected = selectedMonthIdx === idx
-                const eventCount = Object.keys(m.dayEvents).length
-                const isSpecial = m.id === 'dec-69' || m.id === 'jan-70'
 
                 return (
                   <button
                     key={m.id}
                     onClick={() => setSelectedMonthIdx(idx)}
-                    className={`shrink-0 px-3 py-2 rounded-2xl border text-center transition-all ${
+                    className={`shrink-0 px-3.5 py-2 rounded-2xl border text-center transition-all ${
                       isSelected
                         ? 'bg-indigo-600 text-white border-indigo-600 shadow-md scale-105'
-                        : isSpecial
-                        ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 border-amber-300 dark:border-amber-700/80 hover:bg-amber-100'
+                        : m.isHighlight
+                        ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 border-amber-300 dark:border-amber-700 hover:bg-amber-100'
                         : 'bg-slate-50 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100'
                     }`}
                   >
                     <div className="text-xs sm:text-sm font-extrabold">{m.shortName}</div>
                     <div
-                      className={`text-[10px] mt-0.5 font-medium ${
+                      className={`text-[10px] mt-0.5 font-semibold ${
                         isSelected
                           ? 'text-indigo-100'
-                          : isSpecial
-                          ? 'text-amber-700 dark:text-amber-300 font-bold'
+                          : m.isHighlight
+                          ? 'text-amber-700 dark:text-amber-300'
                           : 'text-slate-400 dark:text-slate-400'
                       }`}
                     >
-                      {eventCount} กิจกรรม {isSpecial && '🔥'}
+                      {m.isHighlight ? 'ไฮไลต์ 🔥' : 'ดูปฏิทิน'}
                     </div>
                   </button>
                 )
@@ -628,7 +420,7 @@ export default function TimelineCalendar({ onSelectUni }) {
                 {selectedMonth.fullName}
               </h3>
               <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                (แตะที่การ์ดมหาลัยในช่องวัน เพื่อเปิดดูข้อมูลเต็ม)
+                (แถบสีจะลากยาวข้ามวันตามช่วงเวลารับสมัครจริง)
               </span>
             </div>
 
@@ -642,28 +434,101 @@ export default function TimelineCalendar({ onSelectUni }) {
             </button>
           </div>
 
-          {/* Full Monthly Calendar Grid */}
-          <div className="bg-slate-50/50 dark:bg-slate-900/30 p-2 sm:p-3 rounded-2xl border border-slate-200 dark:border-slate-700">
-            {renderMonthGrid()}
+          {/* Weekday Header (7 Columns) */}
+          <div className="grid grid-cols-7 gap-1 text-center text-xs font-bold text-slate-500 dark:text-slate-400 px-2 py-1">
+            {weekDayNames.map((w, idx) => (
+              <div key={idx} className={idx === 0 || idx === 6 ? 'text-rose-500 font-extrabold' : ''}>
+                {w}
+              </div>
+            ))}
+          </div>
+
+          {/* Calendar Weeks with Continuous Multi-Day Spanning Bars */}
+          <div className="space-y-2">
+            {weeks.map((week, wIdx) => (
+              <div
+                key={wIdx}
+                className="border border-slate-200 dark:border-slate-700/80 rounded-2xl p-2 sm:p-2.5 bg-slate-50/50 dark:bg-slate-900/40 shadow-xs"
+              >
+                {/* 7 Day Numbers */}
+                <div className="grid grid-cols-7 gap-1 text-center mb-1.5">
+                  {week.weekDays.map((d, dIdx) => (
+                    <div
+                      key={dIdx}
+                      className={`text-xs sm:text-sm font-bold ${
+                        d.isCurrentMonth
+                          ? 'text-slate-800 dark:text-slate-200'
+                          : 'text-slate-300 dark:text-slate-600'
+                      }`}
+                    >
+                      {d.dayNumber}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Multi-Day Spanning Event Bars for this Week */}
+                {week.weekEvents.length > 0 ? (
+                  <div className="grid grid-cols-7 gap-x-1 gap-y-1.5 pt-0.5">
+                    {week.weekEvents.map((evt, eIdx) => (
+                      <button
+                        key={eIdx}
+                        onClick={() => onSelectUni?.(evt.uniId)}
+                        style={{
+                          gridColumnStart: evt.colStart + 1,
+                          gridColumnEnd: evt.colEnd + 2
+                        }}
+                        className={`h-7 sm:h-8 px-2 flex items-center justify-between text-left text-xs font-bold transition-transform active:scale-[0.99] hover:brightness-105 cursor-pointer select-none ${
+                          evt.barStyle
+                        } ${
+                          evt.isStart ? 'rounded-l-xl' : 'rounded-l-none border-l-0 pl-1'
+                        } ${
+                          evt.isEnd ? 'rounded-r-xl' : 'rounded-r-none border-r-0 pr-1'
+                        }`}
+                        title={`${evt.uniName} • คณะ${evt.faculty} (${evt.periodText}) - แตะเพื่อดูรายละเอียด`}
+                      >
+                        <span className="truncate flex items-center gap-1">
+                          {evt.isHighlight && <span className="text-[11px]">⭐</span>}
+                          <span className="font-extrabold">{evt.uniName}</span>
+                          <span className="font-normal opacity-90 truncate hidden xs:inline">
+                            {evt.faculty}
+                          </span>
+                          <span className="text-[10px] font-normal opacity-85 shrink-0">
+                            ({evt.round})
+                          </span>
+                        </span>
+
+                        {evt.isEnd && (
+                          <span className="text-[9px] uppercase px-1.5 py-0.2 rounded bg-black/25 shrink-0 font-mono ml-1 hidden sm:inline">
+                            ปิดรับ
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="h-2"></div>
+                )}
+              </div>
+            ))}
           </div>
 
           {/* Monthly Events Summary List (Clickable cards to open popup) */}
           <div className="space-y-2.5 pt-2">
             <div className="text-xs font-bold text-slate-500 dark:text-slate-400 px-1">
-              สรุปเหตุการณ์ประจำเดือน {selectedMonth.shortName}:
+              สรุปช่วงเวลารับสมัครในเดือน {selectedMonth.shortName} (แตะเพื่อเปิดดู):
             </div>
 
-            {Object.entries(selectedMonth.dayEvents).map(([day, evts]) =>
-              evts.map((evt, idx) => (
+            {activeEventsInSelectedMonth.length > 0 ? (
+              activeEventsInSelectedMonth.map((evt) => (
                 <div
-                  key={`${day}-${idx}`}
+                  key={evt.id}
                   onClick={() => onSelectUni?.(evt.uniId)}
-                  className="p-3.5 bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 transition-all cursor-pointer flex items-center justify-between gap-3 active:scale-[0.99] group"
+                  className="p-3.5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:border-indigo-400 dark:hover:border-indigo-500 transition-all cursor-pointer flex items-center justify-between gap-3 active:scale-[0.99] group"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="text-center shrink-0 w-11 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-900 text-indigo-800 dark:text-indigo-200">
-                      <div className="text-xs text-indigo-500 font-semibold">{selectedMonth.shortName.split(' ')[0]}</div>
-                      <div className="text-base font-extrabold leading-none">{day}</div>
+                    <div className="text-center shrink-0 py-1 px-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-900 text-indigo-800 dark:text-indigo-200">
+                      <Clock className="w-4 h-4 text-indigo-600 dark:text-indigo-400 mx-auto mb-0.5" />
+                      <div className="text-[10px] font-extrabold leading-tight">{evt.uniName}</div>
                     </div>
 
                     <div>
@@ -671,12 +536,15 @@ export default function TimelineCalendar({ onSelectUni }) {
                         <span className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                           {evt.uniName} • คณะ{evt.faculty}
                         </span>
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${evt.theme}`}>
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${evt.badgeColor}`}>
                           {evt.round}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                        {evt.desc}
+                      <div className="text-xs font-bold text-indigo-700 dark:text-indigo-300">
+                        {evt.periodText}
+                      </div>
+                      <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mt-0.5">
+                        {evt.note}
                       </p>
                     </div>
                   </div>
@@ -687,6 +555,10 @@ export default function TimelineCalendar({ onSelectUni }) {
                   </div>
                 </div>
               ))
+            ) : (
+              <p className="text-xs text-slate-400 text-center py-2">
+                ไม่มีกิจกรรมเปิดรับสมัครใหม่ในเดือนนี้
+              </p>
             )}
           </div>
         </div>
@@ -721,51 +593,47 @@ export default function TimelineCalendar({ onSelectUni }) {
             </button>
           </div>
 
-          {/* Timeline List (All items are clickable to open popup!) */}
-          <div className="relative pl-4 sm:pl-6 space-y-3.5 before:absolute before:left-1.5 sm:before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 dark:before:bg-slate-700">
-            {activeListEvents.map((item, idx) => (
-              <div key={idx} className="relative group">
-                <div
-                  className={`absolute -left-[19px] sm:-left-[23px] top-2 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-slate-800 ring-2 ring-slate-100 dark:ring-slate-700 ${item.dotColor}`}
-                ></div>
+          {/* Timeline List */}
+          <div className="space-y-3">
+            {ALL_EVENTS.filter((evt) =>
+              timelineMode === 'port' ? !evt.id.includes('quota') : evt.id.includes('quota')
+            ).map((item) => (
+              <div
+                key={item.id}
+                onClick={() => onSelectUni?.(item.uniId)}
+                className={`p-4 rounded-2xl border transition-all cursor-pointer active:scale-[0.99] hover:shadow-md ${
+                  item.isHighlight
+                    ? 'bg-amber-50/80 border-amber-300 dark:bg-amber-950/40 dark:border-amber-700/70'
+                    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600'
+                }`}
+              >
+                <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1.5">
+                  <span className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <Clock className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                    {item.periodText}
+                  </span>
 
-                {/* Clickable Card Item */}
-                <div
-                  onClick={() => onSelectUni?.(item.uniId)}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer active:scale-[0.99] hover:shadow-md ${
-                    item.isHighlight
-                      ? 'bg-amber-50/80 border-amber-300 dark:bg-amber-950/40 dark:border-amber-700/70'
-                      : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600'
-                  }`}
-                >
-                  <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1.5">
-                    <span className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
-                      <Clock className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-                      {item.period}
+                  <div className="flex items-center gap-1.5">
+                    <span className={`text-xs font-bold px-2.5 py-0.5 rounded-md ${item.badgeColor}`}>
+                      {item.uniName}
                     </span>
-
-                    <div className="flex items-center gap-1.5">
-                      <span className={`text-xs font-bold px-2.5 py-0.5 rounded-md border ${item.badgeColor}`}>
-                        {item.uni}
-                      </span>
-                      <span className="text-xs font-medium px-2 py-0.5 rounded-md bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-300">
-                        {item.round}
-                      </span>
-                    </div>
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-md bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-300">
+                      {item.round}
+                    </span>
                   </div>
+                </div>
 
-                  <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                    {item.uni} • คณะ{item.faculty}
-                  </h4>
+                <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white mb-1">
+                  {item.uniName} • คณะ{item.faculty}
+                </h4>
 
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-2.5">
-                    {item.note}
-                  </p>
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-2">
+                  {item.note}
+                </p>
 
-                  <div className="flex items-center text-xs font-bold text-indigo-600 dark:text-indigo-400 gap-1">
-                    <span>แตะเพื่อดูรายละเอียดเกณฑ์พอร์ตทั้งหมด</span>
-                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
+                <div className="flex items-center text-xs font-bold text-indigo-600 dark:text-indigo-400 gap-1">
+                  <span>แตะเพื่อดูรายละเอียดเกณฑ์พอร์ตทั้งหมด</span>
+                  <ChevronRight className="w-4 h-4" />
                 </div>
               </div>
             ))}
