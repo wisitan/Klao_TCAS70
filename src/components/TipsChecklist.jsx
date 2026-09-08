@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { CheckSquare, Square, Sparkles, Heart, Award, FileText, CheckCircle2, AlertCircle } from 'lucide-react'
+import { CheckSquare, Square, Sparkles, AlertCircle, CheckCircle2 } from 'lucide-react'
 
 export default function TipsChecklist() {
   const defaultChecklist = [
@@ -73,24 +73,24 @@ export default function TipsChecklist() {
   const progressPercent = Math.round((completedCount / defaultChecklist.length) * 100)
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Progress Card */}
-      <div className="bg-gradient-to-br from-indigo-600 to-purple-700 text-white rounded-2xl p-4 shadow-sm">
+      <div className="bg-gradient-to-br from-indigo-600 to-purple-700 text-white rounded-3xl p-5 sm:p-6 shadow-md">
         <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-amber-300" />
-            <h2 className="font-bold text-base">Checklist เตรียมพอร์ตจิตวิทยา 70</h2>
+          <div className="flex items-center gap-2.5">
+            <Sparkles className="w-6 h-6 text-amber-300" />
+            <h2 className="font-extrabold text-lg sm:text-xl">Checklist เตรียมพอร์ตจิตวิทยา 70</h2>
           </div>
-          <span className="text-xs font-semibold bg-white/20 px-2.5 py-0.5 rounded-full">
+          <span className="text-xs sm:text-sm font-bold bg-white/20 px-3 py-1 rounded-full">
             {completedCount}/{defaultChecklist.length} สำเร็จ
           </span>
         </div>
-        <p className="text-xs text-indigo-100 leading-relaxed mb-3">
+        <p className="text-sm sm:text-base text-indigo-100 leading-relaxed mb-4">
           ติ๊กสิ่งที่เตรียมไว้แล้ว เพื่อตรวจเช็คความพร้อมก่อนยื่นสมัครจริง!
         </p>
 
         {/* Progress Bar */}
-        <div className="w-full bg-white/20 h-2 rounded-full overflow-hidden">
+        <div className="w-full bg-white/20 h-3 rounded-full overflow-hidden">
           <div
             className="bg-amber-400 h-full rounded-full transition-all duration-300"
             style={{ width: `${progressPercent}%` }}
@@ -98,45 +98,45 @@ export default function TipsChecklist() {
         </div>
       </div>
 
-      {/* Checklist items */}
-      <div className="space-y-2.5">
+      {/* Checklist items with Large Text */}
+      <div className="space-y-3">
         {defaultChecklist.map((item) => {
           const isChecked = !!checkedItems[item.id]
           return (
             <div
               key={item.id}
               onClick={() => toggleCheck(item.id)}
-              className={`p-3.5 rounded-xl border transition-all cursor-pointer flex items-start gap-3 select-none ${
+              className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer flex items-start gap-3.5 select-none ${
                 isChecked
-                  ? 'bg-emerald-50/70 border-emerald-200 text-slate-800'
-                  : 'bg-white border-slate-200 text-slate-800 hover:border-indigo-200'
+                  ? 'bg-emerald-50/80 border-emerald-300 text-slate-800'
+                  : 'bg-white border-slate-300 text-slate-800 hover:border-indigo-300'
               }`}
             >
               <button
                 type="button"
-                className="mt-0.5 shrink-0 transition-transform active:scale-90"
+                className="mt-1 shrink-0 transition-transform active:scale-90"
               >
                 {isChecked ? (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600 fill-emerald-100" />
+                  <CheckCircle2 className="w-6 h-6 text-emerald-600 fill-emerald-100" />
                 ) : (
-                  <Square className="w-5 h-5 text-slate-300 hover:text-indigo-400" />
+                  <Square className="w-6 h-6 text-slate-400 hover:text-indigo-500" />
                 )}
               </button>
 
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5 mb-0.5">
-                  <span className="text-[10px] font-semibold px-2 py-0.2 rounded-md bg-slate-100 text-slate-600">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700">
                     {item.category}
                   </span>
                 </div>
                 <h3
-                  className={`text-xs font-bold leading-snug ${
-                    isChecked ? 'line-through text-slate-500' : 'text-slate-800'
+                  className={`text-base sm:text-lg font-bold leading-snug ${
+                    isChecked ? 'line-through text-slate-500' : 'text-slate-900'
                   }`}
                 >
                   {item.title}
                 </h3>
-                <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                <p className="text-sm sm:text-base text-slate-600 mt-1.5 leading-relaxed">
                   {item.desc}
                 </p>
               </div>
@@ -145,13 +145,13 @@ export default function TipsChecklist() {
         })}
       </div>
 
-      {/* Special Advice Alert */}
-      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs space-y-2">
-        <div className="flex items-center gap-2 font-bold text-amber-900">
-          <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+      {/* Special Advice Alert with Large Readable Text */}
+      <div className="bg-amber-50 border border-amber-300 rounded-3xl p-5 sm:p-6 text-sm sm:text-base space-y-3">
+        <div className="flex items-center gap-2 font-bold text-amber-950 text-base sm:text-lg">
+          <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
           <span>เคล็ดลับสำคัญสำหรับคนอยากเข้าจิตวิทยา:</span>
         </div>
-        <ul className="list-disc list-inside space-y-1 text-slate-700 leading-relaxed text-[11.5px] pl-1">
+        <ul className="list-disc list-inside space-y-2 text-slate-800 leading-relaxed pl-1">
           <li><strong>อย่าเน้นแค่เกียรติบัตรวิชาการ:</strong> จิตวิทยาต้องการคนที่เข้าใจมนุษย์และมีความเมตตา การเล่าเรื่อง (Storytelling) เกี่ยวกับประสบการณ์รับฟังปัญหาเพื่อนหรือทำงานร่วมกับผู้อื่น จะจับใจกรรมการมากกว่า</li>
           <li><strong>ระวังเรื่องความลับผู้รับบริการ:</strong> หากมีกิจกรรมจิตอาสาปรึกษาปัญหา อย่าเปิดเผยชื่อ ข้อมูลส่วนตัว หรือภาพใบหน้าของบุคคลอื่นโดยไม่ได้รับอนุญาต</li>
           <li><strong>เตรียมพร้อมรอบสัมภาษณ์:</strong> คณะจิตวิทยามักเน้นการทดสอบ EQ, ทัศนคติ และความมั่นคงทางอารมณ์</li>
