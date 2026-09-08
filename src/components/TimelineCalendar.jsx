@@ -331,20 +331,8 @@ export default function TimelineCalendar({ onSelectUni }) {
           </div>
         </div>
 
-        {/* View Option Toggle: Month Grid View vs List View */}
+        {/* View Option Toggle: List View vs Month Grid View */}
         <div className="flex bg-slate-100 dark:bg-slate-700/80 p-1 rounded-2xl self-start sm:self-auto text-xs sm:text-sm font-bold shadow-inner">
-          <button
-            onClick={() => setViewType('month')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all ${
-              viewType === 'month'
-                ? 'bg-white dark:bg-slate-600 text-indigo-700 dark:text-indigo-200 shadow-sm'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <CalendarRange className="w-4 h-4" />
-            <span>ตารางรายเดือน (Month Grid)</span>
-          </button>
-
           <button
             onClick={() => setViewType('list')}
             className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all ${
@@ -355,6 +343,18 @@ export default function TimelineCalendar({ onSelectUni }) {
           >
             <List className="w-4 h-4" />
             <span>แบบรายการ (List)</span>
+          </button>
+
+          <button
+            onClick={() => setViewType('month')}
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all ${
+              viewType === 'month'
+                ? 'bg-white dark:bg-slate-600 text-indigo-700 dark:text-indigo-200 shadow-sm'
+                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <CalendarRange className="w-4 h-4" />
+            <span>ตารางรายเดือน (Month Grid)</span>
           </button>
         </div>
       </div>
